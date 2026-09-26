@@ -81,6 +81,9 @@ performed.
 <img src="screenshots/06-add-tool-mcp-option.png" width="700" alt="The plus Add button's dropdown showing Model Context Protocol (MCP) and Workflow options">
 
 8. Configure the MCP server connection:
+
+<img src="screenshots/07-add-mcp-server-form.png" width="700" alt="Add MCP server form with Server name, Server description, Server URL, and Authentication (None, API key, OAuth 2.0) fields">
+
    - Enter a server name and description.
    - In the **Server URL** field, enter the Reltio MCP server endpoint:
 

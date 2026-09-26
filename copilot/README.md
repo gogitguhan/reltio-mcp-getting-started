@@ -68,12 +68,17 @@ performed.
 
 7. In the **Add a tool** dialog, select **Model Context Protocol**.
 
-> **UI discrepancy observed:** the actual **Add a tool** dialog (at time of
-> writing) doesn't show a "Model Context Protocol" option under its
-> **Featured** tab. Instead, select the dedicated **MCP** tab at the top of
-> the dialog (alongside Featured, Connectors, and Workflows).
+> **UI detail observed:** the actual **Add a tool** dialog (at time of
+> writing) doesn't list "Model Context Protocol" under its **Featured** tab.
+> There's a dedicated **MCP** tab alongside Featured, Connectors, and
+> Workflows, but the direct path is the **`+ Add`** button in the top right
+> corner: it opens a small dropdown with two options, **"Model Context
+> Protocol (MCP)"** and **"Workflow."** Select **Model Context Protocol
+> (MCP)**.
 
 <img src="screenshots/05-add-a-tool-dialog.png" width="700" alt="Add a tool dialog showing Featured, MCP, Connectors, and Workflows tabs">
+
+<img src="screenshots/06-add-tool-mcp-option.png" width="700" alt="The plus Add button's dropdown showing Model Context Protocol (MCP) and Workflow options">
 
 8. Configure the MCP server connection:
    - Enter a server name and description.

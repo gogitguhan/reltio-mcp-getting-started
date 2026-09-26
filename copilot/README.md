@@ -134,7 +134,7 @@ cross-check against, ask your Reltio admin or Reltio Support for the correct
 environment value, per the same guidance in the
 [main guide's endpoint section](../README.md#common-issue-which-endpointurl-do-i-authenticate-against).
 
-<img src="screenshots/09-mcp-server-form-corrected-url.png" width="700" alt="Add MCP server form with the corrected environment-based Server URL and no error banner">
+<img src="screenshots/09-mcp-server-form-corrected-url.png" width="700" alt="Add MCP server form with the corrected environment-based Server URL, a Reltio logo added to the server icon, and no error banner">
 
 9. Select **Create**, and then select **Connect** to establish the
    connection.

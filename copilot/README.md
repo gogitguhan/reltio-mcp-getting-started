@@ -96,6 +96,19 @@ performed.
      required credentials (Client ID, Client Secret, Authorization URL,
      Token URL, and scopes).
 
+<img src="screenshots/08-mcp-server-configured-oauth.png" width="700" alt="Add MCP server form with name, description, and URL filled in and OAuth 2.0 selected (tenant ID redacted)">
+
+> **UI detail observed:** selecting **OAuth 2.0** reveals an additional
+> **Configuration type** choice not mentioned in Reltio's docs: **Dynamic
+> (with discovery)**, **Dynamic**, or **Manual**. "Dynamic (with discovery)"
+> is selected by default, which matches the OAuth discovery flow described
+> in [Authentication flow for the AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/authentication-flow-for-the-agentflow-mcp-server)
+> (the client discovers the OAuth endpoints itself rather than them being
+> entered manually), so it was left as-is.
+>
+> **Note on privacy:** the tenant ID in the Server URL field is redacted
+> (black bar) in the screenshot above.
+
 9. Select **Create**, and then select **Connect** to establish the
    connection.
 

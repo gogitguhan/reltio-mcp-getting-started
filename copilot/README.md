@@ -40,7 +40,7 @@ performed.
 
 2. Select **+ New agent**.
 
-![Copilot Studio home page](screenshots/01-copilot-studio-home.png)
+<img src="screenshots/01-copilot-studio-home.png" width="700" alt="Copilot Studio home page">
 
 3. On the **Start building your agent** page, select the **Configure** tab.
 
@@ -50,9 +50,11 @@ performed.
    - In the **Description** field, enter a description for the agent.
    - In the **Instructions** field, define the agent's behavior and scope.
 
-![Untitled Agent build page, Configure tab, with the Name field selected for editing and the default Instructions template shown](screenshots/02-new-agent-configure-tab.png)
+<img src="screenshots/02-new-agent-configure-tab.png" width="700" alt="Untitled Agent build page, Configure tab, with the Name field selected for editing and the default Instructions template shown">
 
 5. Select **Create** to provision the agent.
+
+<img src="screenshots/03-agent-created-with-instructions.png" width="700" alt="Reltio Data Explorer agent created, showing the custom Instructions field filled in">
 
 6. Select the **Tools** tab, and then select **Add tool**.
 

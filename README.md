@@ -31,9 +31,9 @@ Authentication successful. You can close this tab and return to Claude Code.
 Restart Claude Code afterward so the session picks up the authenticated
 connection.
 
-![Reltio MCP login screen prompting for tenant ID](screenshots/01-mcp-login-tenant-prompt.png)
+<img src="screenshots/01-mcp-login-tenant-prompt.png" width="700" alt="Reltio MCP login screen prompting for tenant ID">
 
-![Authentication successful confirmation page](screenshots/02-mcp-login-success.png)
+<img src="screenshots/02-mcp-login-success.png" width="700" alt="Authentication successful confirmation page">
 
 ### Common issue: "Which endpoint/URL do I authenticate against?"
 

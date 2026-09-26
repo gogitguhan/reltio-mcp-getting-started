@@ -1,4 +1,4 @@
-# Reltio MCP Server — Getting Started
+# Reltio MCP Server: Getting Started
 
 A walkthrough of connecting to Reltio's MCP (Model Context Protocol) server from
 Claude Code, exploring the tools it exposes, and running a hands-on test of
@@ -37,7 +37,7 @@ connection.
 
 ### Common issue: "Which endpoint/URL do I authenticate against?"
 
-A third-party engineer working through this same setup got stuck here — the
+A third-party engineer working through this same setup got stuck here: the
 login step needs to know which Reltio MCP endpoint to talk to, and it isn't
 obvious where that value comes from. Reltio's official documentation confirms
 this is something you must already have in hand, not something the client
@@ -47,10 +47,10 @@ derives automatically. Direct quote from Reltio's docs:
 > endpoint ... Contact Reltio Support if you need help enabling the MCP
 > feature"
 >
-> — [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Prerequisites
+> Source: [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Prerequisites
 
 That same page's official configuration examples show the endpoint as a
-placeholder you must fill in yourself with your own environment value — it is
+placeholder you must fill in yourself with your own environment value; it is
 **not** a fixed, universal URL:
 
 ```json
@@ -61,10 +61,10 @@ placeholder you must fill in yourself with your own environment value — it is
   "--debug"
 ]
 ```
-— [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Mac/Linux and Windows configuration examples
+Source: [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Mac/Linux and Windows configuration examples
 
 `<Env>` is tenant/environment-specific. If you don't already know it, ask your
-Reltio tenant administrator or Reltio Support — the docs don't provide a
+Reltio tenant administrator or Reltio Support; the docs don't provide a
 self-service way to look it up.
 
 Once the client has the correct endpoint, sign-in itself is handled for you
@@ -80,11 +80,11 @@ via OAuth. Per Reltio's documentation:
 > provided, it receives a 401 Unauthorized response with a
 > WWW-Authenticate header pointing to the OAuth discovery endpoint."
 >
-> — [Authentication flow for the AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/authentication-flow-for-the-agentflow-mcp-server)
+> Source: [Authentication flow for the AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/authentication-flow-for-the-agentflow-mcp-server)
 
 ## 2. Verify the connection
 
-Ask Claude to run a health check — under the hood this calls the server's
+Ask Claude to run a health check; under the hood this calls the server's
 `health_check_tool`:
 
 ```
@@ -102,8 +102,8 @@ along with example usages for each.
 
 Reltio distinguishes between:
 
-- **Customer tenant** — the tenant ID you authenticated with.
-- **Data tenant** — the underlying tenant(s) your customer tenant subscribes
+- **Customer tenant**: the tenant ID you authenticated with.
+- **Data tenant**: the underlying tenant(s) your customer tenant subscribes
   to via DTSS (Distributed Tenant Sharing Service).
 
 ```
@@ -132,20 +132,20 @@ entity (linked via the `IndividualHasAddress` relationship type), while
 `Phone` is a **Nested** attribute with sub-fields like `Number`, `Type`, and
 `FormattedNumber`.
 
-Reviewing the match rules ahead of time matters — it tells you exactly which
+Reviewing the match rules ahead of time matters: it tells you exactly which
 field combinations Reltio's matching engine considers when flagging
 duplicates. For example, this tenant had:
 
-- **BaseRule06** — exact `Phone.Number` + fuzzy (phonetic) `FirstName`/`LastName`
-- **BaseRule03** — exact `Address.AddressLine1` + `Address.PostalCode.Zip5` + fuzzy names
-- **BaseRule01/02** — automatic (auto-merge) rules requiring *exact* name matches, stricter than the two above
+- **BaseRule06**: exact `Phone.Number` + fuzzy (phonetic) `FirstName`/`LastName`
+- **BaseRule03**: exact `Address.AddressLine1` + `Address.PostalCode.Zip5` + fuzzy names
+- **BaseRule01/02**: automatic (auto-merge) rules requiring *exact* name matches, stricter than the two above
 
 ## 6. Create test data to exercise entity matching
 
 **Goal:** create a few similar-looking `Individual` (Person) records and see
 whether Reltio's built-in matching engine flags them as potential duplicates.
 
-**Step A — create a shared address (`Location` entity):**
+**Step A: create a shared address (`Location` entity):**
 
 ```
 create_entity_tool(
@@ -163,10 +163,10 @@ create_entity_tool(
 )
 ```
 
-Reltio auto-cleansed/enriched this on write — adding a ZIP+4, geocode
-coordinates, and a verification status — without any extra input from us.
+Reltio auto-cleansed/enriched this on write, adding a ZIP+4, geocode
+coordinates, and a verification status, without any extra input from us.
 
-**Step B — create three `Individual` records with phonetically similar names
+**Step B: create three `Individual` records with phonetically similar names
 and the *same* phone number:**
 
 | Record | First Name | Last Name | Phone |
@@ -196,7 +196,7 @@ create_entity_tool(
 )
 ```
 
-**Step C — link each `Individual` to the shared `Location` via the
+**Step C: link each `Individual` to the shared `Location` via the
 `IndividualHasAddress` relationship:**
 
 ```
@@ -227,8 +227,8 @@ get_entity_with_matches_tool(
 
 ### Result
 
-The first record ("Jon Smith") came back with **2 potential matches** — the
-"John Smith" and "Jonathan Smyth" records — each flagged by **two** match
+The first record ("Jon Smith") came back with **2 potential matches**: the
+"John Smith" and "Jonathan Smyth" records, each flagged by **two** match
 rules simultaneously:
 
 | Matched record | Rule fired | Why |
@@ -242,21 +242,21 @@ rules simultaneously:
 
 - **Suspect vs. automatic rules matter**: the stricter *automatic* rules
   (which require exact name matches) did **not** fire, since our names only
-  phonetically resembled each other. Only the *suspect* rules — designed for
-  fuzzy matches — triggered, which is correct: these get queued for human
+  phonetically resembled each other. Only the *suspect* rules, designed for
+  fuzzy matches, triggered, which is correct: these get queued for human
   review rather than auto-merged.
 - **Multiple independent signals compound confidence**: each pair matched on
   *two* separate rules (one phone-based, one address-based) rather than just
   one, which is a stronger duplicate signal than either alone.
 - Reltio's cleansing pipeline runs automatically on write (address
-  geocoding/verification, phone formatting/validation) — no separate
+  geocoding/verification, phone formatting/validation); no separate
   cleansing step was needed.
 
 ## Next steps to explore
 
-- `verify_match_tool(entity_id_1, entity_id_2, tenant_id)` — get a
+- `verify_match_tool(entity_id_1, entity_id_2, tenant_id)`: get a
   human-readable explanation of why two entities matched.
-- `merge_entities_tool(entity_ids, tenant_id)` — merge a matched pair, then
+- `merge_entities_tool(entity_ids, tenant_id)`: merge a matched pair, then
   `unmerge_entity_tool(...)` to reverse it.
-- `reject_entity_match_tool(source_id, target_id, tenant_id)` — mark a pair as
+- `reject_entity_match_tool(source_id, target_id, tenant_id)`: mark a pair as
   *not* a duplicate and confirm it no longer appears as a potential match.

@@ -109,6 +109,33 @@ performed.
 > **Note on privacy:** the tenant ID in the Server URL field is redacted
 > (black bar) in the screenshot above.
 
+### Troubleshooting: "Can't create MCP server. Try again."
+
+Clicking **Add** with the Server URL above failed with a red banner reading
+"Can't create MCP server. Try again."
+
+**Cause:** `<environment>` in the URL pattern is **not** the customer tenant
+ID. It's a separate Reltio environment/pod name. Using the tenant ID there
+(e.g. `https://<CUSTOMER_TENANT_ID>.reltio.com/ai/tools/mcp/`) produces a
+hostname that doesn't resolve at all (confirmed via DNS lookup: `curl` failed
+with "Could not resolve host").
+
+**How the correct value was found:** the same MCP server was already
+connected and working from Claude Code (see the main guide). Checking that
+existing connection's configuration (`claude mcp get reltio-mcp-server`)
+showed the actual URL in use, which uses the environment name instead of the
+tenant ID. That corrected hostname resolves and returns a normal
+`401 Unauthorized` (the expected response for an unauthenticated request,
+per Reltio's documented flow) rather than a DNS failure.
+
+**Fix:** use your Reltio environment/pod name in place of `<environment>`,
+not your tenant ID. If you don't already have a working MCP connection to
+cross-check against, ask your Reltio admin or Reltio Support for the correct
+environment value, per the same guidance in the
+[main guide's endpoint section](../README.md#common-issue-which-endpointurl-do-i-authenticate-against).
+
+<img src="screenshots/09-mcp-server-form-corrected-url.png" width="700" alt="Add MCP server form with the corrected environment-based Server URL and no error banner">
+
 9. Select **Create**, and then select **Connect** to establish the
    connection.
 

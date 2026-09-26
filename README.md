@@ -260,3 +260,9 @@ rules simultaneously:
   `unmerge_entity_tool(...)` to reverse it.
 - `reject_entity_match_tool(source_id, target_id, tenant_id)`: mark a pair as
   *not* a duplicate and confirm it no longer appears as a potential match.
+
+## Related guides
+
+- [Connecting Microsoft Copilot to the Reltio MCP Server](copilot/README.md): the
+  same MCP endpoint, connected from Microsoft Copilot Studio instead of
+  Claude Code.

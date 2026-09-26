@@ -68,6 +68,13 @@ performed.
 
 7. In the **Add a tool** dialog, select **Model Context Protocol**.
 
+> **UI discrepancy observed:** the actual **Add a tool** dialog (at time of
+> writing) doesn't show a "Model Context Protocol" option under its
+> **Featured** tab. Instead, select the dedicated **MCP** tab at the top of
+> the dialog (alongside Featured, Connectors, and Workflows).
+
+<img src="screenshots/05-add-a-tool-dialog.png" width="700" alt="Add a tool dialog showing Featured, MCP, Connectors, and Workflows tabs">
+
 8. Configure the MCP server connection:
    - Enter a server name and description.
    - In the **Server URL** field, enter the Reltio MCP server endpoint:

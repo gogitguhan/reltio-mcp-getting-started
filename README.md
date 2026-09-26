@@ -31,6 +31,57 @@ Authentication successful. You can close this tab and return to Claude Code.
 Restart Claude Code afterward so the session picks up the authenticated
 connection.
 
+![Reltio MCP login screen prompting for tenant ID](screenshots/01-mcp-login-tenant-prompt.png)
+
+![Authentication successful confirmation page](screenshots/02-mcp-login-success.png)
+
+### Common issue: "Which endpoint/URL do I authenticate against?"
+
+A third-party engineer working through this same setup got stuck here — the
+login step needs to know which Reltio MCP endpoint to talk to, and it isn't
+obvious where that value comes from. Reltio's official documentation confirms
+this is something you must already have in hand, not something the client
+derives automatically. Direct quote from Reltio's docs:
+
+> "Before you begin, make sure you have: ... The AgentFlow MCP server
+> endpoint ... Contact Reltio Support if you need help enabling the MCP
+> feature"
+>
+> — [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Prerequisites
+
+That same page's official configuration examples show the endpoint as a
+placeholder you must fill in yourself with your own environment value — it is
+**not** a fixed, universal URL:
+
+```json
+"args": [
+  "mcp-remote",
+  "https://<Env>.reltio.com/ai/tools/mcp/",
+  "9696",
+  "--debug"
+]
+```
+— [Configure Claude to connect with Reltio AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/configure-claude-to-connect-with-reltio-agentflow-mcp-server), Mac/Linux and Windows configuration examples
+
+`<Env>` is tenant/environment-specific. If you don't already know it, ask your
+Reltio tenant administrator or Reltio Support — the docs don't provide a
+self-service way to look it up.
+
+Once the client has the correct endpoint, sign-in itself is handled for you
+via OAuth. Per Reltio's documentation:
+
+> "The AgentFlow MCP Server uses OAuth 2.0 Authorization Code Flow with PKCE
+> to authenticate users and agents. This flow ensures secure, auditable, and
+> context-aware access to Reltio APIs. All interactions with MCP tools
+> require a valid access token issued by the Reltio Authentication Server."
+>
+> "MCP tool access attempt (without token): The MCP client tries to invoke
+> the MCP tool by calling the AgentFlow MCP Server. Since no token is
+> provided, it receives a 401 Unauthorized response with a
+> WWW-Authenticate header pointing to the OAuth discovery endpoint."
+>
+> — [Authentication flow for the AgentFlow MCP Server](https://docs.reltio.com/en/developer-resources/ai-integrations/reltio-model-context-protocol-mcp-server-at-a-glance/authentication-flow-for-the-agentflow-mcp-server)
+
 ## 2. Verify the connection
 
 Ask Claude to run a health check — under the hood this calls the server's

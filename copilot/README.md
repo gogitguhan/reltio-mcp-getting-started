@@ -58,6 +58,14 @@ performed.
 
 6. Select the **Tools** tab, and then select **Add tool**.
 
+> **UI discrepancy observed:** Reltio's documentation says to "select the
+> Tools tab," but the actual Copilot Studio agent page (at time of writing)
+> shows **Tools** as a section in a right-hand configuration panel (alongside
+> Model, Skills, Knowledge, Connected agents, and Memory), not a separate top
+> level tab. Select the **`+`** next to **Tools** in that panel instead.
+
+<img src="screenshots/04-agent-panel-options.png" width="700" alt="Agent configuration panel showing Model, Skills, Tools, Knowledge, Connected agents, and Memory sections">
+
 7. In the **Add a tool** dialog, select **Model Context Protocol**.
 
 8. Configure the MCP server connection:

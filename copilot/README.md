@@ -271,11 +271,38 @@ fails at a later step, retries, and collides with the connector it just
 created. If so, the real error is hidden server-side and isn't visible
 from the browser.
 
-**Next step:** check whether Reltio's servers received any request from
-Microsoft at the exact time of a failed attempt. If a request arrived and
-returned an error, that error is the real cause. If nothing arrived, the
-failure is inside Copilot Studio, and it goes to Microsoft support with
-the request correlation IDs from the capture.
+### Control test: a non-Reltio MCP server
+
+To separate Reltio from the environment, the same **Add MCP server** flow
+was run with Microsoft's own public MCP server, with no authentication at
+all:
+
+| Server URL | Authentication | Result |
+|---|---|---|
+| `https://learn.microsoft.com/api/mcp` | None | 409 DuplicateItemError |
+| `https://learn.microsoft.com/api/mcp` (second, new name) | None | 409 DuplicateItemError, ~12 s |
+
+### Conclusion
+
+The "Can't create MCP server" failure in this environment has nothing to
+do with Reltio. It happens with Microsoft's own MCP server, with no OAuth,
+no redirect URIs, and no Reltio endpoint involved. The problem is with
+Copilot Studio's MCP tool creation in this specific Power Platform
+environment, most likely an environment policy or configuration issue.
+It needs to go to the Power Platform environment admin or Microsoft
+support, with the request correlation IDs from the network capture.
+
+The Reltio-side observations earlier in this guide are still accurate as
+observations, but they are **not** what blocks Copilot Studio here:
+
+- `/.well-known/oauth-protected-resource` returns 401 by design; clients
+  are meant to use `/.well-known/oauth-authorization-server`.
+- Redirect URIs for Copilot Studio are managed on Reltio's login page
+  allowlist, not through the client management API.
+
+To confirm the Reltio integration end to end, the next step is to repeat
+this setup in a Copilot Studio environment where adding MCP servers works
+(verified first with the Microsoft Learn control test above).
 
 ## Screenshots
 

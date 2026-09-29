@@ -158,6 +158,69 @@ Once connected, the Copilot agent can discover and run Reltio MCP tools to
 read and act on data in the Reltio environment, the same tools used from
 Claude Code in the main guide.
 
+## Root cause found, and engineering's response
+
+After the steps above kept failing, further investigation (see
+[../claude/README.md](../claude/README.md) for the live reconnect test that
+isolated it) found two distinct issues in the AgentFlow OAuth
+implementation:
+
+1. `/.well-known/oauth-protected-resource` incorrectly required
+   authentication (should be publicly fetchable per the MCP Authorization
+   spec).
+2. The OAuth server only accepted `localhost`-style redirect URIs, which
+   blocks any cloud-hosted client (Copilot Studio included) that must use a
+   fixed external HTTPS callback.
+
+Reltio's engineering team responded with clarification on both:
+
+1. `/.well-known/oauth-authorization-server` is the metadata endpoint they
+   intend clients to use (confirmed working throughout this investigation);
+   `oauth-protected-resource` was never added to their auth-bypass list
+   since it isn't part of their intended flow. (One residual inconsistency:
+   the MCP endpoint's `401` response still advertises
+   `oauth-protected-resource` via its `WWW-Authenticate` header, which could
+   still trip up a client that trusts that header literally.)
+2. Redirect URIs are managed separately on their login page (not via the
+   customer client management API's `redirectUri` field, which is
+   deprecated). Redirect URIs for Copilot Studio, Claude, and ChatGPT have
+   been added there and were reported as tested.
+
+This second point also exposed a gap in our own earlier testing: our
+`redirectUrlNotAllowed` reproduction used a placeholder redirect URI
+(`https://example.com/callback`), not Copilot Studio's actual one, so it
+didn't actually prove Copilot Studio's real callback was blocked, only that
+an arbitrary one was. The retest below re-attempts the connection now that
+the redirect URI fix is reported to be in place.
+
+## Retest: after engineering feedback
+
+<img src="screenshots/10-retest-agent-overview.png" width="700" alt="Reltio Data Explorer agent overview page, Build tab">
+
+<img src="screenshots/11-retest-tools-panel.png" width="700" alt="Tools panel highlighted in the agent configuration sidebar">
+
+<img src="screenshots/12-retest-add-a-tool-dialog.png" width="700" alt="Add a tool dialog with the plus Add button highlighted">
+
+<img src="screenshots/13-retest-mcp-option-dropdown.png" width="700" alt="Dropdown showing Model Context Protocol (MCP) and Workflow options">
+
+<img src="screenshots/14-retest-add-mcp-server-blank.png" width="700" alt="Blank Add MCP server form with Dynamic (with discovery) selected by default">
+
+For this blank form:
+
+- **Server name**: `Reltio AgentFlow MCP Server`
+- **Server description**: `Reltio AgentFlow MCP server for searching and inspecting master data records and checking potential duplicate matches.`
+- **Server URL**: `https://<environment>.reltio.com/ai/tools/mcp/` (the
+  environment/pod name, not the tenant ID, see the troubleshooting note
+  above)
+- **Authentication**: `OAuth 2.0`
+- **Configuration type**: select **Dynamic** (not **Dynamic (with
+  discovery)**). Engineering's fix addresses the redirect URI allowlist, not
+  the still-unresolved `oauth-protected-resource` discovery bug, so "Dynamic
+  (with discovery)" is still expected to fail for that separate reason.
+  "Dynamic" only needs Authorization URL (`https://login.reltio.com`) and
+  Token URL (`https://login.reltio.com/token`), both already confirmed
+  valid, without depending on the broken discovery endpoint.
+
 ## Screenshots
 
 Screenshots are captured inline above, next to the step they correspond to,

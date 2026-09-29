@@ -221,6 +221,24 @@ For this blank form:
   Token URL (`https://login.reltio.com/token`), both already confirmed
   valid, without depending on the broken discovery endpoint.
 
+### Result: still failing
+
+<img src="screenshots/15-retest-still-failing.png" width="700" alt="Add MCP server form with Dynamic configuration type, correct URLs, still showing Can't create MCP server error">
+
+With the form filled in exactly as above (Dynamic configuration type,
+correct Server URL, both Authorization/Token URLs confirmed valid), the
+same **"Can't create MCP server. Try again."** error still appears.
+
+This means the redirect URI fix reported by engineering either isn't
+resolving this specific case, or Copilot Studio's actual redirect URI
+doesn't match what was allowlisted. Since Microsoft assigns a **unique
+redirect URL per connector** (`https://global.consent.azure-apim.net/redirect/<connector-specific-id>`,
+not a single shared value) for OAuth-based custom connectors, the next
+useful diagnostic is capturing the *exact* `redirect_uri` this specific
+connector attempt sends (via browser DevTools → Network tab, filtering for
+requests to `login.reltio.com`), rather than assuming it matches an
+earlier-tested value.
+
 ## Screenshots
 
 Screenshots are captured inline above, next to the step they correspond to,

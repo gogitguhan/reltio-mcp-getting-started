@@ -267,5 +267,5 @@ rules simultaneously:
   same MCP endpoint, connected from Microsoft Copilot Studio instead of
   Claude Code.
 - [Live Reconnect Test: Claude Code vs. Copilot Studio](claude/README.md): a
-  side-by-side test that isolates why Copilot Studio fails where Claude Code
-  succeeds on the same environment.
+  side-by-side test confirming the Reltio OAuth flow works end to end from
+  Claude Code on the same environment.

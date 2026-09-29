@@ -66,36 +66,26 @@ PKCE flow, including whatever client registration step it needs, end to
 end, on this exact environment, at a moment when the environment's
 protected-resource metadata endpoint was still broken. That means:
 
-- The broken `oauth-protected-resource` endpoint is a real bug (confirmed,
-  reproducible, and worth reporting), but it is **not** a hard blocker for
-  every MCP client. Claude Code's client tolerates it, most likely by
-  falling back to the sibling `oauth-authorization-server` metadata
-  endpoint directly (which we separately confirmed works correctly),
-  rather than depending on the strictly-required-by-spec resource metadata
-  step.
-- Copilot Studio's specific failure is therefore **not** explained by a
-  general "OAuth is broken here" story, since OAuth demonstrably works,
-  right now, on this same environment.
-- The actual, specific blocker for Copilot Studio is the one we confirmed
-  directly earlier: Reltio's auth server only allows **`localhost`-style
-  redirect URIs**, which is exactly what Claude Code's `mcp-remote` uses
-  (it runs as a local process on the machine and listens on a local
-  callback port). Microsoft Copilot Studio is cloud-hosted and must use a
-  fixed HTTPS callback on Microsoft's own domain
-  (`https://global.consent.azure-apim.net/redirect`), which Reltio's auth
-  server rejects outright:
-
-  ```
-  GET https://login.reltio.com/?redirect_uri=https://example.com/callback&...
-  → 302 location: /error?id=redirectUrlNotAllowed
-  ```
+- The `oauth-protected-resource` endpoint returning 401 is not a blocker.
+  Reltio's engineering team confirmed that clients are meant to use the
+  sibling `oauth-authorization-server` metadata endpoint, which works
+  correctly, and Claude Code's client does exactly that.
+- OAuth demonstrably works end to end on this environment, so a
+  Copilot Studio failure can't be explained by a general OAuth problem.
 
 ## Conclusion
 
-This test isolates the real, narrow gap: **Reltio's AgentFlow MCP OAuth
-implementation on this environment supports desktop/CLI-style clients with
-local redirect URIs, but has no supported mechanism (via dynamic client
-registration or the admin Console) to allow a cloud-hosted platform's fixed
-HTTPS redirect URI.** That's a specific, fixable, and well-evidenced gap to
-raise with Reltio, distinct from (and independent of) the separate
-protected-resource metadata bug.
+The Reltio AgentFlow MCP server and its OAuth flow work correctly from
+Claude Code.
+
+An earlier version of this page concluded that Reltio's auth server only
+accepts `localhost` redirect URIs, and that this was what blocked Copilot
+Studio. **That conclusion was wrong.** It was based on a test that used a
+placeholder redirect URI (`https://example.com/callback`), not Copilot
+Studio's real one. Reltio's engineering team confirmed that redirect URIs
+for Copilot Studio, Claude, and ChatGPT are allowlisted on Reltio's login
+page.
+
+The Copilot Studio failure turned out to be unrelated to Reltio. It
+reproduces with Microsoft's own public MCP server and no authentication
+at all. See the [control test in the Copilot guide](../copilot/README.md#control-test-a-non-reltio-mcp-server).

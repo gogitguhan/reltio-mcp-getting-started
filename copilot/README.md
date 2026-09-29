@@ -158,19 +158,18 @@ Once connected, the Copilot agent can discover and run Reltio MCP tools to
 read and act on data in the Reltio environment, the same tools used from
 Claude Code in the main guide.
 
-## Root cause found, and engineering's response
+## Initial suspicions, and engineering's response
 
-After the steps above kept failing, further investigation (see
-[../claude/README.md](../claude/README.md) for the live reconnect test that
-isolated it) found two distinct issues in the AgentFlow OAuth
-implementation:
+After the steps above kept failing, the first round of investigation (see
+[../claude/README.md](../claude/README.md)) suspected two issues in the
+AgentFlow OAuth implementation. Both turned out **not** to be the cause
+(see the conclusion below):
 
-1. `/.well-known/oauth-protected-resource` incorrectly required
-   authentication (should be publicly fetchable per the MCP Authorization
-   spec).
-2. The OAuth server only accepted `localhost`-style redirect URIs, which
-   blocks any cloud-hosted client (Copilot Studio included) that must use a
-   fixed external HTTPS callback.
+1. `/.well-known/oauth-protected-resource` returns 401, although the MCP
+   Authorization spec expects it to be publicly fetchable.
+2. It looked as if the OAuth server only accepted `localhost`-style
+   redirect URIs, which would block cloud-hosted clients like Copilot
+   Studio.
 
 Reltio's engineering team responded with clarification on both:
 

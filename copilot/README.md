@@ -229,15 +229,53 @@ With the form filled in exactly as above (Dynamic configuration type,
 correct Server URL, both Authorization/Token URLs confirmed valid), the
 same **"Can't create MCP server. Try again."** error still appears.
 
-This means the redirect URI fix reported by engineering either isn't
-resolving this specific case, or Copilot Studio's actual redirect URI
-doesn't match what was allowlisted. Since Microsoft assigns a **unique
-redirect URL per connector** (`https://global.consent.azure-apim.net/redirect/<connector-specific-id>`,
-not a single shared value) for OAuth-based custom connectors, the next
-useful diagnostic is capturing the *exact* `redirect_uri` this specific
-connector attempt sends (via browser DevTools → Network tab, filtering for
-requests to `login.reltio.com`), rather than assuming it matches an
-earlier-tested value.
+### What the browser network capture showed
+
+Capturing the network traffic (DevTools → Network, with "Preserve log" on)
+while clicking **Add** showed that the failing request never goes to
+Reltio from the browser. It's Copilot Studio's own backend call:
+
+```
+POST https://<region>.gateway.prod.island.powerapps.com/api/botmanagement/v1/environments/<environment-id>/connectors/apim
+→ 409 Conflict
+{
+  "Code": "DuplicateItemError",
+  "Message": "A custom connector with display name '<name>' already exists in the environment. It may have been created by another user or may not be visible to you. Please specify a different name."
+}
+```
+
+Findings from repeated attempts:
+
+- The same 409 appears for **brand-new names** that were never used before.
+- It happens with all three configuration types. The request payload
+  shows `identityProvider: "oauth2pkcewithdcr"` in the Dynamic modes and
+  `identityProvider: "oauth2pkce"` in Manual mode, so it fails even when
+  no dynamic client registration is involved.
+- It reproduces on two different agents and in both Chrome and Safari,
+  which rules out anything browser-side or agent-specific.
+- Each failing call takes **about 12 seconds** before returning the 409.
+  A genuine duplicate-name check would return in milliseconds.
+- The classic **Custom connectors** list in Power Apps
+  (`make.powerapps.com/.../customconnectors`) shows no Reltio connectors
+  at all, so there's nothing visible to clean up.
+- `https://login.reltio.com/.well-known/oauth-authorization-server` and
+  `/.well-known/openid-configuration` both return 404. The metadata lives
+  under `https://<environment>.reltio.com/ai/tools/.well-known/oauth-authorization-server`
+  instead. This doesn't explain the Manual-mode failure, but it matters
+  for any client that tries to discover metadata from the Authorization
+  URL's host.
+
+**Current read:** the 12-second delay plus a "duplicate" error on
+never-used names suggests Copilot Studio's backend creates the connector,
+fails at a later step, retries, and collides with the connector it just
+created. If so, the real error is hidden server-side and isn't visible
+from the browser.
+
+**Next step:** check whether Reltio's servers received any request from
+Microsoft at the exact time of a failed attempt. If a request arrived and
+returned an error, that error is the real cause. If nothing arrived, the
+failure is inside Copilot Studio, and it goes to Microsoft support with
+the request correlation IDs from the capture.
 
 ## Screenshots
 

@@ -266,6 +266,8 @@ rules simultaneously:
 - [Connecting Microsoft Copilot to the Reltio MCP Server](copilot/README.md): the
   same MCP endpoint, connected from Microsoft Copilot Studio instead of
   Claude Code.
+- [Connecting Microsoft Foundry to the Reltio MCP Server](azure-foundry/README.md):
+  the same MCP endpoint, connected from an agent in Microsoft Foundry.
 - [Live Reconnect Test: Claude Code vs. Copilot Studio](claude/README.md): a
   side-by-side test confirming the Reltio OAuth flow works end to end from
   Claude Code on the same environment.
